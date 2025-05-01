@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Hash;
+
 
 class AuthController extends Controller
 {
@@ -24,16 +27,41 @@ class AuthController extends Controller
 
         $user = User::create($data);
 
-        return redirect()->route('auth.login')->with('success', 'user registered successfully');
+        return redirect()->route('login.form')->with('success', 'user registered successfully');
     }
 
     public function showLoginForm()
 {
     return view('auth.login'); // Make sure this Blade file exists
 }
-
 public function login(Request $request){
-    
-}
+    $request->validate([
+        'username' => 'required|string',
+        'password' => 'required|min:3',
+    ]);
+
+    $user = User::where('username', $request->username)->first(); // Get one user
+
+    if ($user && Hash::check($request->password, $user->password)) {
+        Session::put('userId', $user->id);
+        Session::put('name', $user->username);
+
+        return redirect()->route('dashboard');
+    }
+    return back()->with('error','Invalid credentials'); 
 
 }
+
+
+
+
+public function logout(){
+    session()->forget('userId');
+
+    return redirect('/login')->with('success', 'Logged out successfully');
+}
+
+
+
+}
+
