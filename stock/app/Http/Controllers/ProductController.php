@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -12,7 +12,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('products.index');
+
+        $products = Product::all();
+
+        return view('pages.products.index', compact('products'));
     }
 
     /**
@@ -20,7 +23,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-      return view('products.create');
+      return view('pages.products.create');
     }
 
     /**
@@ -29,8 +32,13 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-
+         'pname' => 'required|string'   
         ]);
+
+        $product = new Product();
+        $product->pname = $request->input('pname');
+        $product->save();
+        return redirect()->route('products.index')->with('success', 'product  create Successfully!');
     }
 
     /**
@@ -44,24 +52,43 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit($pcode )
     {
-        //
+      
+    $products = Product::findOrFail($pcode);
+    return view('pages.products.edit', compact('products'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $pcode)
     {
-        //
+        
+        $request->validate([
+         
+            'pname' => 'required|string'   
+           ]);
+
+           $products = Product::findOrFail($pcode);
+
+        $products->pname = $request->input('pname');
+        $products->save();
+        return redirect()->route('products.index')->with('success', 'product  updated Successfully!');
+
+
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy($pcode)
     {
-        //
+       $products = Product::findOrFail($pcode);
+
+       $products->delete();
+
+       return redirect()->route('products.index')->with('success', 'product deleted successfully');
     }
 }

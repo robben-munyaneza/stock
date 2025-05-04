@@ -3,6 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Dashboard;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductinController;
+use App\Http\Controllers\ProductoutController;
+use App\Http\Controllers\ReportController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,5 +26,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 Route::resource('products',  ProductController::class);
+Route::resource('productin', ProductinController::class);
+Route::resource('productout', ProductoutController::class);
+Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 
 

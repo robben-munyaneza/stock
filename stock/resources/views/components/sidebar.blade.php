@@ -11,11 +11,11 @@
             <h3>Sidebar</h3>
             <ul>
                 <li><a href="{{route('dashboard')}}">Dashboard</a></li>
-                <li><a href="">Product</a></li>
-                <li><a href="">StockIn</a></li>
-                <li><a href="">StockOut</a></li>
-                <li><a href="">Report</a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="{{route('products.index')}}">Product</a></li>
+                <li><a href="{{route('productin.index')}}">StockIn</a></li>
+                <li><a href="{{route('productout.index')}}">StockOut</a></li>
+                <li><a href="{{route('reports.index')}}">Report</a></li>
+                <li><a href="{{route('logout')}}">Logout</a></li>
             </ul>
 
             {{-- This is where the page content will appear --}}
