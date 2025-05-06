@@ -1,13 +1,69 @@
 @extends('components.sidebar')
 
 @section('content')
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 30px;
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    h1, h2 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 40px;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #007bff;
+        color: white;
+        padding: 12px;
+        text-align: center;
+    }
+
+    td {
+        padding: 10px;
+        text-align: center;
+        background-color: #fff;
+    }
+
+    tfoot th {
+        font-weight: bold;
+        background-color: #f1f1f1;
+    }
+
+    .profit-positive {
+        color: green;
+        font-weight: bold;
+    }
+
+    .profit-negative {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+
 <div class="container">
-    <h1>Daily and Monthly Report</h1>
+    <h1>📊 Daily and Monthly Report</h1>
 
     {{-- =========== DAILY REPORT ============ --}}
-    <h2>Daily Report for {{ $dailyDate }}</h2>
+    <h2>📅 Daily Report for {{ $dailyDate }}</h2>
 
-    <table border="1" cellpadding="5" cellspacing="0">
+    <table>
         <thead>
             <tr>
                 <th>Product</th>
@@ -33,7 +89,7 @@
                     <td>{{ number_format($inTotal, 2) }}</td>
                     <td>{{ $outQty }}</td>
                     <td>{{ number_format($outTotal, 2) }}</td>
-                    <td style="color: {{ $profit >= 0 ? 'green' : 'red' }}">
+                    <td class="{{ $profit >= 0 ? 'profit-positive' : 'profit-negative' }}">
                         {{ number_format($profit, 2) }}
                     </td>
                 </tr>
@@ -49,19 +105,17 @@
             @endphp
             <tr>
                 <th colspan="5" style="text-align: right">Total Profit / Loss:</th>
-                <th style="color: {{ $dailyTotalProfit >= 0 ? 'green' : 'red' }}">
+                <th class="{{ $dailyTotalProfit >= 0 ? 'profit-positive' : 'profit-negative' }}">
                     {{ number_format($dailyTotalProfit, 2) }}
                 </th>
             </tr>
         </tfoot>
     </table>
 
-    <br><br>
-
     {{-- =========== MONTHLY REPORT ============ --}}
-    <h2>Monthly Report for {{ \Carbon\Carbon::parse($monthlyMonth)->format('F Y') }}</h2>
+    <h2>🗓️ Monthly Report for {{ \Carbon\Carbon::parse($monthlyMonth)->format('F Y') }}</h2>
 
-    <table border="1" cellpadding="5" cellspacing="0">
+    <table>
         <thead>
             <tr>
                 <th>Product</th>
@@ -87,7 +141,7 @@
                     <td>{{ number_format($inTotal, 2) }}</td>
                     <td>{{ $outQty }}</td>
                     <td>{{ number_format($outTotal, 2) }}</td>
-                    <td style="color: {{ $profit >= 0 ? 'green' : 'red' }}">
+                    <td class="{{ $profit >= 0 ? 'profit-positive' : 'profit-negative' }}">
                         {{ number_format($profit, 2) }}
                     </td>
                 </tr>
@@ -103,11 +157,12 @@
             @endphp
             <tr>
                 <th colspan="5" style="text-align: right">Total Profit / Loss:</th>
-                <th style="color: {{ $monthlyTotalProfit >= 0 ? 'green' : 'red' }}">
+                <th class="{{ $monthlyTotalProfit >= 0 ? 'profit-positive' : 'profit-negative' }}">
                     {{ number_format($monthlyTotalProfit, 2) }}
                 </th>
             </tr>
         </tfoot>
     </table>
 </div>
+
 @endsection

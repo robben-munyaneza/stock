@@ -1,43 +1,105 @@
 @extends('components.sidebar')
+
 @section('content')
+<style>
+    .form-container {
+        background-color: white;
+        padding: 30px;
+        max-width: 700px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
 
-<h2>Edit Product In</h2>
+    .form-container h2 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
 
-@if(session('success'))
-    <p style="color: green;">{{ session('success') }}</p>
-@endif
+    .form-container label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+        color: #333;
+    }
 
-<form action="{{ route('productin.update', $productin->id) }}" method="POST">
-    @csrf
-    @method('PUT')
+    .form-container input,
+    .form-container select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
 
-    <label for="pcode">Product Code:</label><br>
-    <select name="pcode" id="pcode" required>
-        <option value="">-- Select Product Code --</option>
-        @foreach ($products as $product)
-            <option value="{{ $product->pcode }}" 
-                {{ $product->pcode == $productin->pcode ? 'selected' : '' }}>
-                {{ $product->pcode }} - {{ $product->pname }}
-            </option>
-        @endforeach
-    </select><br><br>
+    .form-container input:focus,
+    .form-container select:focus {
+        border-color: #2980b9;
+        outline: none;
+    }
 
-    <label for="productin_date">Date:</label><br>
-    <input type="date" id="productin_date" name="productin_date" value="{{ $productin->productin_date }}" required><br><br>
+    .form-container button {
+        margin-top: 20px;
+        padding: 12px 20px;
+        background-color: #27ae60;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
 
-    <label for="productin_quantity">Quantity:</label><br>
-    <input type="number" id="productin_quantity" name="productin_quantity" value="{{ $productin->productin_quantity }}" required><br><br>
+    .form-container button:hover {
+        background-color: #1e8449;
+    }
 
-    <label for="productin_unitprice">Unit Price:</label><br>
-    <input type="number" step="0.01" id="productin_unitprice" name="productin_unitprice" value="{{ $productin->productin_unitprice }}" required><br><br>
+    .form-container p {
+        margin-top: 10px;
+        color: green;
+        font-weight: bold;
+    }
+</style>
 
-    <label for="productin_totalprice">Total Price:</label><br>
-    <input type="number" step="0.01" id="productin_totalprice" name="productin_totalprice" value="{{ $productin->productin_totalprice }}" readonly required><br><br>
+<div class="form-container">
+    <h2>Edit Product In</h2>
 
-    <button type="submit">Update</button>
-</form>
+    @if(session('success'))
+        <p>{{ session('success') }}</p>
+    @endif
 
-{{-- ✅ JavaScript to auto-update total price --}}
+    <form action="{{ route('productin.update', $productin->id) }}" method="POST">
+        @csrf
+        @method('PUT')
+
+        <label for="pcode">Product Code:</label>
+        <select name="pcode" id="pcode" required>
+            <option value="">-- Select Product Code --</option>
+            @foreach ($products as $product)
+                <option value="{{ $product->pcode }}" 
+                    {{ $product->pcode == $productin->pcode ? 'selected' : '' }}>
+                    {{ $product->pcode }} - {{ $product->pname }}
+                </option>
+            @endforeach
+        </select>
+
+        <label for="productin_date">Date:</label>
+        <input type="date" id="productin_date" name="productin_date" value="{{ $productin->productin_date }}" required>
+
+        <label for="productin_quantity">Quantity:</label>
+        <input type="number" id="productin_quantity" name="productin_quantity" value="{{ $productin->productin_quantity }}" required>
+
+        <label for="productin_unitprice">Unit Price:</label>
+        <input type="number" step="0.01" id="productin_unitprice" name="productin_unitprice" value="{{ $productin->productin_unitprice }}" required>
+
+        <label for="productin_totalprice">Total Price:</label>
+        <input type="number" step="0.01" id="productin_totalprice" name="productin_totalprice" value="{{ $productin->productin_totalprice }}" readonly required>
+
+        <button type="submit">Update</button>
+    </form>
+</div>
+
 <script>
     const qtyInput = document.getElementById('productin_quantity');
     const priceInput = document.getElementById('productin_unitprice');
@@ -56,5 +118,4 @@
     qtyInput.addEventListener('input', updateTotal);
     priceInput.addEventListener('input', updateTotal);
 </script>
-
 @endsection
